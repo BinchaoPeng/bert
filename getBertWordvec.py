@@ -1,16 +1,26 @@
 import torch
 from pytorch_transformers import BertTokenizer, BertModel
+import platform
 
-tokenizer = BertTokenizer.from_pretrained('E:/bert/6-new-12w-0')
-model = BertModel.from_pretrained('E:/bert/6-new-12w-0')
-input_ids = torch.tensor(tokenizer.encode("自然语言处理")).unsqueeze(0) # Batch size 1
+system = str(platform.system())
+print(system)
+if (system == "Windows"):
+    url = 'E:/bert/'
+elif (system == "Linux"):
+    url = '/media/pbc/数据/bert'
+else:
+    print("Other System tasks")
+
+tokenizer = BertTokenizer.from_pretrained(url + '6-new-12w-0')
+model = BertModel.from_pretrained(url + '6-new-12w-0')
+input_ids = torch.tensor(tokenizer.encode("自然语言处理")).unsqueeze(0)  # Batch size 1
 # input_ids = torch.tensor(
 #     [tokenizer.encode("ATGTTT"), tokenizer.encode("ATGAGC"), tokenizer.encode("ATGGAT")])  # Batch size 3, Seq 1
 
-input_ids = torch.tensor(tokenizer.encode("ATGTTTATGAGC")).unsqueeze(0)  # Batch size 1
+input_ids = torch.tensor(tokenizer.encode("ATGTTC TATGAG ")).unsqueeze(0)  # Batch size 1
 
-input_ids = torch.tensor(
-    [tokenizer.encode("自然语言处理"), tokenizer.encode("自然语言处理")])  # Batch size 3, Seq 7
+# input_ids = torch.tensor(
+#     [tokenizer.encode("自然语言处理"), tokenizer.encode("自然语言处理")])  # Batch size 3, Seq 7
 
 print(input_ids)
 outputs = model(input_ids)
