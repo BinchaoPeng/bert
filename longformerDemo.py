@@ -1,22 +1,28 @@
+from transformers import AutoModel, AutoTokenizer, pipeline
 import torch
-from transformers import AutoModel, AutoTokenizer
-
 
 model_name = 'pre-model/' + 'longformer-encdec-base-16384'
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
+classifier = pipeline('feature-extraction', model=model, tokenizer=tokenizer)
 
-print(model)
+# encoded_inputs = tokenizer(["ATGCATGCNACT"], ["ATGCATGCNACT"], return_token_type_ids=True, return_tensors='pt')
+encoded_inputs = tokenizer(["ATGCATGCNACT" * 2000, "ATGCATG" * 2000, "ACTGGTCATGCAC" * 500], return_tensors='pt',
+                           padding=True)
+print(encoded_inputs)
+# feature = model(input_ids=encoded_inputs['input_ids'], attention_mask=encoded_inputs['attention_mask'],
+#                 return_netsors='pt')
+feature = model(**encoded_inputs,
+                return_netsors='pt')
+print(feature[0])
+print(type(feature[0]))
+# feature = torch.as_tensor(feature)
+# print(feature.shape)
+print("***" * 48)
 
-input_ids = torch.tensor(tokenizer.encode("[CLS] ATGTTC TATGAG [SEP] ATGTTC TATGAG "*500)).unsqueeze(0)  # Batch size 1
-
-
-print(input_ids)
-outputs = model(input_ids)
-# last_hidden_states = outputs[0]  # The last hidden-state is the first element of the output tuple
-sequence_output = outputs[0]
-pooled_output = outputs[1]
-print(sequence_output)
-print(sequence_output.shape)  ## 字向量
-print(pooled_output)
-print(pooled_output.shape)  ## 句向量
+feature = classifier(["ATG" * 1000, "ATGCATG" * 1000, "ACTGGTCATGCAC" * 300])
+print(type(feature))
+feature = torch.as_tensor(feature)
+print(feature)
+print(feature.shape)
+print("***" * 48)
