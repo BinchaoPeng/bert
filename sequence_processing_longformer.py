@@ -64,9 +64,9 @@ print('neg_samples:' + str(len(y_tes) - int(sum(y_tes))))
 
 
 X_en_tra, X_pr_tra = get_data(enhancers_tra, promoters_tra)
-# X_en_imtra, X_pr_imtra = get_data(im_enhancers_tra, im_promoters_tra)
-# X_en_tes, X_pr_tes = get_data(enhancers_tes, promoters_tes)
+X_en_imtra, X_pr_imtra = get_data(im_enhancers_tra, im_promoters_tra)
+X_en_tes, X_pr_tes = get_data(enhancers_tes, promoters_tes)
 
-# np.savez(Data_dir + '%s_train.npz' % name, X_en_tra=X_en_tra, X_pr_tra=X_pr_tra, y_tra=y_tra)
-# np.savez(Data_dir + 'im_%s_train.npz' % name, X_en_tra=X_en_imtra, X_pr_tra=X_pr_imtra, y_tra=y_imtra)
-# np.savez(Data_dir + '%s_test.npz' % name, X_en_tes=X_en_tes, X_pr_tes=X_pr_tes, y_tes=y_tes)
+np.savez(Data_dir + '%s_train.npz' % name, X_en_tra=X_en_tra, X_pr_tra=X_pr_tra, y_tra=y_tra)
+np.savez(Data_dir + 'im_%s_train.npz' % name, X_en_tra=X_en_imtra, X_pr_tra=X_pr_imtra, y_tra=y_imtra)
+np.savez(Data_dir + '%s_test.npz' % name, X_en_tes=X_en_tes, X_pr_tes=X_pr_tes, y_tes=y_tes)

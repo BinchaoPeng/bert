@@ -7,7 +7,7 @@ import platform
 # if (system == "Windows"):
 #     url = 'E:/bert/'
 # elif (system == "Linux"):
-#     url = 'pre-model/'
+#     url = 'pre-model1/'
 # else:
 #     print("Other System tasks")
 
