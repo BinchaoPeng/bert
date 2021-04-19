@@ -3,21 +3,24 @@ from longformer.longformer import Longformer, LongformerConfig
 from longformer.sliding_chunks import pad_to_window_size
 from transformers import RobertaTokenizer
 
-config = LongformerConfig.from_pretrained('pre-model1/' + 'longformer-encdec-base-16384')
+config = LongformerConfig.from_pretrained('pre-model/' + 'longformer-encdec-base-16384')
 # choose the attention mode 'n2', 'tvm' or 'sliding_chunks'
 # 'n2': for regular n2 attantion
 # 'tvm': a custom CUDA kernel implementation of our sliding window attention
 # 'sliding_chunks': a PyTorch implementation of our sliding window attention
 config.attention_mode = 'sliding_chunks'
 
-model = Longformer.from_pretrained('pre-model1/' + 'longformer-encdec-base-16384', config=config)
+model = Longformer.from_pretrained('pre-model/' + 'longformer-encdec-base-16384', config=config)
 tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 tokenizer.model_max_length = model.config.max_position_embeddings
 
-SAMPLE_TEXT = ' '.join(['Hello world! '] * 1000)  # long input document
+SAMPLE_TEXT = ' '.join(['Hello world! '] * 100)  # long input document
 
-input_ids = torch.tensor(tokenizer.encode(SAMPLE_TEXT)).unsqueeze(0)  # batch of size 1
+print(SAMPLE_TEXT)
 
+input_ids = torch.tensor(tokenizer.encode("AT GC" * 1000)).unsqueeze(0)  # batch of size 1
+
+print(input_ids)
 # TVM code doesn't work on CPU. Uncomment this if `config.attention_mode = 'tvm'`
 # model = model.cuda(); input_ids = input_ids.cuda()
 
@@ -34,3 +37,4 @@ input_ids, attention_mask = pad_to_window_size(
 output = model(input_ids, attention_mask=attention_mask)[0]
 
 print(output)
+print(output.shape)
