@@ -7,9 +7,9 @@ model = AutoModel.from_pretrained(model_name)
 classifier = pipeline('feature-extraction', model=model, tokenizer=tokenizer)
 
 txtList = ["ATGCACGTAC" * 300 + tokenizer.sep_token + "CGTAGCATCG" * 200,
-           "ATCGGCTACT" * 300 + tokenizer.sep_token + "GCATGCATGC" * 200,
-           "TCAGAGACTG" * 300 + tokenizer.sep_token + "ACGTGCNACT" * 200,
-           "GGGTCANACT" * 300 + tokenizer.sep_token + "TTTCGAACCT" * 200
+           # "ATCGGCTACT" * 300 + tokenizer.sep_token + "GCATGCATGC" * 200,
+           # "TCAGAGACTG" * 300 + tokenizer.sep_token + "ACGTGCNACT" * 200,
+           # "GGGTCANACT" * 300 + tokenizer.sep_token + "TTTCGAACCT" * 200
            ]
 
 # encoded_inputs = tokenizer(["ATGCATGCNACT"], ["ATGCATGCNACT"], return_token_type_ids=True, return_tensors='pt')

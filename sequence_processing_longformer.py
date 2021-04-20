@@ -1,40 +1,36 @@
 import numpy as np
-from transformers import AutoTokenizer, AutoModel
+from transformers import LongformerModel, LongformerTokenizer, LongformerConfig
+
+
 # from transformers import pipeline  # !!! can not import pipline.......
 
 
 def get_data(enhancers, promoters):
-    model_name = 'pre-model/' + 'longformer-encdec-base-16384'
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name)
-    # classifier = pipeline('feature-extraction', model=model, tokenizer=tokenizer)
+    model_name = 'pre-model/' + 'longformer-base-4096'
+    config = LongformerConfig.from_pretrained(model_name)
+    tokenizer = LongformerTokenizer.from_pretrained(model_name)
+    model = LongformerModel.from_pretrained(model_name, config=config, tokenizer=tokenizer)
 
-    encoded_inputs = tokenizer(enhancers, return_tensors='pt', padding=True)
-    X_en_feature = model(**encoded_inputs, return_netsors='pt')
+    # X_enpr_features = []
+    # for enhancer, promoter in zip(enhancers, promoters):
+    #     encoded_inputs = tokenizer(enhancer + tokenizer.sep_token + promoter, return_tensors='pt', padding=True)
+    #     X_enpr_feature = model(**encoded_inputs, return_netsors='pt')
+    #     X_enpr_features.append(X_enpr_feature)
 
-    encoded_inputs = tokenizer(promoters, return_tensors='pt', padding=True)
-    X_pr_feature = model(**encoded_inputs, return_netsors='pt')
-    # print(type(feature))
-    # feature = torch.as_tensor(feature)
-    # print(feature)
-    print(X_en_feature.shape)
-    print(X_pr_feature.shape)
-    X_en = np.array(X_en_feature)
-    X_pr = np.array(X_pr_feature)
-    print(X_en_tra)
-    print(X_pr_tra)
-    return X_en, X_pr
+    encoded_inputs = tokenizer(enhancers + tokenizer.sep_token + promoters, return_tensors='pt', padding=True)
+    X_enpr_features = model(**encoded_inputs, return_netsors='pt')
+    X_enpr = np.array(X_enpr_features)
+    return X_enpr
 
 
 # In[]:
-
-
 names = ['pbc_IMR90', 'GM12878', 'HUVEC', 'HeLa-S3', 'IMR90', 'K562', 'NHEK']
 name = names[0]
+feature_name = "longformer-hug"
 train_dir = 'data/%s/train/' % name
 imbltrain = 'data/%s/imbltrain/' % name
 test_dir = 'data/%s/test/' % name
-Data_dir = 'data/%s/' % name
+Data_dir = 'data/%s/%s/' % (name, feature_name)
 print('Experiment on %s dataset' % name)
 
 print('Loading seq data...')
@@ -62,11 +58,10 @@ print('neg_samples:' + str(len(y_tes) - int(sum(y_tes))))
 
 # In[ ]:
 
+X_enpr_tra = get_data(enhancers_tra, promoters_tra)
+X_enpr_imtra = get_data(im_enhancers_tra, im_promoters_tra)
+X_enpr_tes = get_data(enhancers_tes, promoters_tes)
 
-X_en_tra, X_pr_tra = get_data(enhancers_tra, promoters_tra)
-X_en_imtra, X_pr_imtra = get_data(im_enhancers_tra, im_promoters_tra)
-X_en_tes, X_pr_tes = get_data(enhancers_tes, promoters_tes)
-
-np.savez(Data_dir + '%s_train.npz' % name, X_en_tra=X_en_tra, X_pr_tra=X_pr_tra, y_tra=y_tra)
-np.savez(Data_dir + 'im_%s_train.npz' % name, X_en_tra=X_en_imtra, X_pr_tra=X_pr_imtra, y_tra=y_imtra)
-np.savez(Data_dir + '%s_test.npz' % name, X_en_tes=X_en_tes, X_pr_tes=X_pr_tes, y_tes=y_tes)
+np.savez(Data_dir + '%s_train.npz' % name, X_enpr_tra=X_enpr_tra, y_tra=y_tra)
+np.savez(Data_dir + 'im_%s_train.npz' % name, X_enpr_tra=X_enpr_imtra, y_tra=y_imtra)
+np.savez(Data_dir + '%s_test.npz' % name, X_enpr_tes=X_enpr_tes, y_tes=y_tes)
