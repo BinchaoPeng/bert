@@ -28,12 +28,20 @@ for input_id in encoded_inputs['input_ids']:
     seq = tokenizer.decode(input_id)
     print(seq)
 
-X_enpr_features = model(**encoded_inputs)
-X_enpr = np.array(X_enpr_features)
+X_enpr_features = model(**encoded_inputs)[0]
+print(X_enpr_features.shape)
+
+X_enpr = X_enpr_features.detach().numpy()
 
 print(X_enpr)
 print(X_enpr.size)
+print(X_enpr.shape)
 # encoded_inputs = tokenizer(txts1, return_tensors='pt', padding=True,
 #                            max_len=max)
 # X_enpr_features = model(**encoded_inputs)
 # X_enpr = np.array(X_enpr_features)
+
+print("output:")
+for item in X_enpr:
+    print(item)
+    print("\n")

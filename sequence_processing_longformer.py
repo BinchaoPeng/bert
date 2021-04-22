@@ -25,19 +25,22 @@ def get_max_length(seq_list, tokenizer):
 
         ep_list = [enhancer + tokenizer.sep_token + promoter for enhancer, promoter in zip(enhancers, promoters)]
         max_length = get_max_length(ep_list, tokenizer)
-
-        X_enpr_features = []
+        print("MAX:", max_length, "##" * 100)
+        X_enprs = []
         for enhancer, promoter in zip(enhancers, promoters):
             encoded_inputs = tokenizer(enhancer + tokenizer.sep_token + promoter, return_tensors='pt', padding=True,
                                        max_length=max_length)
-            X_enpr_feature = model(**encoded_inputs)
-            X_enpr_features.append(X_enpr_feature)
+            X_enpr_tensor = model(**encoded_inputs)[0]
+            # print(X_enpr_features.shape)
+
+            X_enpr_np = X_enpr_tensor.detach().numpy()
+            X_enprs.append(X_enpr_np)
 
         # ep_list = [enhancer + tokenizer.sep_token + promoter for enhancer, promoter in zip(enhancers, promoters)]
         # encoded_inputs = tokenizer(ep_list, return_tensors='pt', padding=True)
         # X_enpr_features = model(**encoded_inputs, return_netsors='pt')
-        X_enpr = np.array(X_enpr_features)
-        return X_enpr
+
+        return X_enprs
 
     # In[]:
     names = ['pbc_IMR90', 'GM12878', 'HUVEC', 'HeLa-S3', 'IMR90', 'K562', 'NHEK']
