@@ -16,8 +16,8 @@ def get_data(enhancers, promoters):
     #     encoded_inputs = tokenizer(enhancer + tokenizer.sep_token + promoter, return_tensors='pt', padding=True)
     #     X_enpr_feature = model(**encoded_inputs, return_netsors='pt')
     #     X_enpr_features.append(X_enpr_feature)
-
-    encoded_inputs = tokenizer(enhancers + tokenizer.sep_token + promoters, return_tensors='pt', padding=True)
+    ep_list = [enhancer + tokenizer.sep_token + promoter for enhancer, promoter in zip(enhancers, promoters)]
+    encoded_inputs = tokenizer(ep_list, return_tensors='pt', padding=True)
     X_enpr_features = model(**encoded_inputs, return_netsors='pt')
     X_enpr = np.array(X_enpr_features)
     return X_enpr
