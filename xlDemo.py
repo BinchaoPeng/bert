@@ -1,10 +1,10 @@
 import numpy as np
-from transformers import LongformerModel, LongformerTokenizer, LongformerConfig
+from transformers import TransfoXLModel, TransfoXLTokenizer, TransfoXLConfig, TransfoXLCorpus
 
-model_name = 'pre-model/' + 'longformer-base-4096'
-config = LongformerConfig.from_pretrained(model_name)
-tokenizer = LongformerTokenizer.from_pretrained(model_name)
-model = LongformerModel.from_pretrained(model_name, config=config)
+model_name = 'pre-model/' + 'transfo_xl_wt103'
+config = TransfoXLConfig.from_pretrained(model_name)
+tokenizer = TransfoXLTokenizer.from_pretrained(model_name)
+model = TransfoXLModel.from_pretrained(model_name, config=config)
 
 txts = ["ATGCAGTA", "ATGCATGCA", "ACGTACGATGCAAA"]
 
@@ -20,8 +20,7 @@ for txt in txts:
 
 txts1 = ["ATGCA", "ACTGACGTA", "ACG"]
 
-encoded_inputs = tokenizer(txts, return_tensors='pt', padding=True,
-                           max_length=max)
+encoded_inputs = tokenizer(txts, txts1, return_tensors='pt')
 print(encoded_inputs)
 
 for input_id in encoded_inputs['input_ids']:
