@@ -41,11 +41,11 @@ print(X_enpr.shape)
 # X_enpr_features = model(**encoded_inputs)
 # X_enpr = np.array(X_enpr_features)
 
-print("output:")
-for item in X_enpr:
-    print(item)
-    print("\n")
-
-np.savez("test.npz", x1=X_enpr, x2=X_enpr)
-
-print("saved!")
+# print("output:")
+# for item in X_enpr:
+#     print(item)
+#     print("\n")
+#
+# np.savez("test.npz", x1=X_enpr, x2=X_enpr)
+#
+# print("saved!")

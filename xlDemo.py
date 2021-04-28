@@ -7,6 +7,7 @@ tokenizer = TransfoXLTokenizer.from_pretrained(model_name)
 model = TransfoXLModel.from_pretrained(model_name, config=config)
 
 txts = ["ATGCAGTA", "ATGCATGCA", "ACGTACGATGCAAA"]
+txts1 = ["ATGCA", "ACTGACGTA", "ACG"]
 
 max = 0
 for txt in txts:
@@ -18,7 +19,7 @@ for txt in txts:
     if token_value > max:
         max = token_value
 
-txts1 = ["ATGCA", "ACTGACGTA", "ACG"]
+
 
 encoded_inputs = tokenizer(txts, txts1, return_tensors='pt')
 print(encoded_inputs)
@@ -40,11 +41,11 @@ print(X_enpr.shape)
 # X_enpr_features = model(**encoded_inputs)
 # X_enpr = np.array(X_enpr_features)
 
-print("output:")
-for item in X_enpr:
-    print(item)
-    print("\n")
-
-np.savez("test.npz", x1=X_enpr, x2=X_enpr)
-
-print("saved!")
+# print("output:")
+# for item in X_enpr:
+#     print(item)
+#     print("\n")
+#
+# np.savez("test.npz", x1=X_enpr, x2=X_enpr)
+#
+# print("saved!")

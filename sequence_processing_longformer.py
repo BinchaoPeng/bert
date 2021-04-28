@@ -19,10 +19,14 @@ def get_max_length(seq_list, tokenizer):
         return max_value
 
 
-def get_data(enhancers, promoters, tokenizer, model):
+def get_data_max_length(enhancers, promoters):
     ep_list = [enhancer + tokenizer.sep_token + promoter for enhancer, promoter in zip(enhancers, promoters)]
     max_length = get_max_length(ep_list, tokenizer)
-    print("MAX:", max_length, "##" * 100)
+    print("MAX:", max_length, "##" * 50)  # 2626 2659
+    return max_length
+
+
+def get_data(enhancers, promoters, tokenizer, model, max_length):
     X_enprs = []
     for enhancer, promoter in zip(enhancers, promoters):
         encoded_inputs = tokenizer(enhancer + tokenizer.sep_token + promoter, return_tensors='pt', padding=True,
@@ -39,6 +43,29 @@ def get_data(enhancers, promoters, tokenizer, model):
     # X_enpr_features = model(**encoded_inputs, return_netsors='pt')
     print("add:", len(X_enprs))
     return X_enprs
+
+
+def save_data(enhancers, promoters, tokenizer, model, max_length, file):
+    with open(file, 'ab') as f:
+        for enhancer, promoter in zip(enhancers, promoters):
+            print(tokenizer.sep_token)
+            encoded_inputs = tokenizer(enhancer + tokenizer.sep_token + promoter, return_tensors='pt', padding=True,
+                                       max_length=max_length)
+
+            X_enpr_tensor = model(**encoded_inputs)[0]
+            # print(X_enpr_features.shape)
+            X_enpr_np = X_enpr_tensor.detach().numpy()
+
+            for item in X_enpr_np:
+                # print(item)
+                np.savetxt(f, item, delimiter=',')
+
+    f.close()
+    # ep_list = [enhancer + tokenizer.sep_token + promoter for enhancer, promoter in zip(enhancers, promoters)]
+    # encoded_inputs = tokenizer(ep_list, return_tensors='pt', padding=True)
+    # X_enpr_features = model(**encoded_inputs, return_netsors='pt')
+
+    print("save over!")
 
 
 # In[]:
@@ -80,14 +107,25 @@ config = LongformerConfig.from_pretrained(model_name)
 tokenizer = LongformerTokenizer.from_pretrained(model_name)
 model = LongformerModel.from_pretrained(model_name, config=config)
 
-X_enpr_tra = get_data(enhancers_tra, promoters_tra, tokenizer, model)
-np.savez(Data_dir + '%s_train.npz' % name, X_enpr_tra=X_enpr_tra, y_tra=y_tra)
-print("saved train!")
+a1 = get_data_max_length(enhancers_tra, promoters_tra)
+a2 = get_data_max_length(im_enhancers_tra, im_promoters_tra)
+a3 = get_data_max_length(enhancers_tes, promoters_tes)
 
-X_enpr_imtra = get_data(im_enhancers_tra, im_promoters_tra, tokenizer, model)
-np.savez(Data_dir + 'im_%s_train.npz' % name, X_enpr_tra=X_enpr_imtra, y_tra=y_imtra)
-print("saved im_train!")
+max_value = max(a1, a2, a3)
+print(max_value)
+# X_enpr_tra = get_data(enhancers_tra, promoters_tra, tokenizer, model)
+# np.savez(Data_dir + '%s_train.npz' % name, X_enpr_tra=X_enpr_tra, y_tra=y_tra)
+# print("saved train!")
+# save_data(enhancers_tra, promoters_tra, tokenizer, model, max_value, Data_dir + '%s_train.csv' % name)
 
-X_enpr_tes = get_data(enhancers_tes, promoters_tes, tokenizer, model)
-np.savez(Data_dir + '%s_test.npz' % name, X_enpr_tes=X_enpr_tes, y_tes=y_tes)
-print("saved test!")
+#
+# X_enpr_imtra = get_data(im_enhancers_tra, im_promoters_tra, tokenizer, model)
+# np.savez(Data_dir + 'im_%s_train.npz' % name, X_enpr_tra=X_enpr_imtra, y_tra=y_imtra)
+# print("saved im_train!")
+# save_data(im_enhancers_tra, im_promoters_tra, tokenizer, model, max_value, Data_dir + 'im_%s_train.csv' % name)
+
+# 
+# X_enpr_tes = get_data(enhancers_tes, promoters_tes, tokenizer, model)
+# np.savez(Data_dir + '%s_test.npz' % name, X_enpr_tes=X_enpr_tes, y_tes=y_tes)
+# print("saved test!")
+# save_data(enhancers_tes, promoters_tes, tokenizer, model, max_value, Data_dir + '%s_test.csv' % name)

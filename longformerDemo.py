@@ -11,9 +11,13 @@ txtList = ["ATGCACGTAC" * 300 + tokenizer.sep_token + "CGTAGCATCG" * 200,
            # "TCAGAGACTG" * 300 + tokenizer.sep_token + "ACGTGCNACT" * 200,
            # "GGGTCANACT" * 300 + tokenizer.sep_token + "TTTCGAACCT" * 200
            ]
-
+txtList1 = ("ATGCACGTAC" + tokenizer.sep_token + "CGTAGCATCG",
+           "ATCGGCTACT" + tokenizer.sep_token + "GCATGCATGC",
+           "TCAGAGACTG" + tokenizer.sep_token + "ACGTGCNACT",
+           "GGGTCANACT" + tokenizer.sep_token + "TTTCGAACCT"
+            )
 # encoded_inputs = tokenizer(["ATGCATGCNACT"], ["ATGCATGCNACT"], return_token_type_ids=True, return_tensors='pt')
-encoded_inputs = tokenizer(txtList, return_tensors='pt', padding=True)
+encoded_inputs = tokenizer(txtList1, return_tensors='pt', padding=True)
 print(encoded_inputs)
 print("***" * 48)
 
