@@ -14,6 +14,7 @@ model_input = model_input.unsqueeze(0)  # to generate a fake batch with batch si
 
 output = model(model_input)
 print(output[0])
+
 print(output[0].shape, "\n\n")
 # CLS token's embedding
 print(output[1])
