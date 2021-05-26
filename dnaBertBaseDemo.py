@@ -17,6 +17,5 @@ print(output[0])
 
 print(output[0].shape, "\n\n")
 # CLS token's embedding
-
 print(output[1])
 print(output[1].shape, "\n\n")
